@@ -43,23 +43,23 @@ public class GameEngine {
         switch (currentScene) {
             case TOWN_GATE:
                 if (hasSilverRing) {
-                    return "Guard: Oh, you returned with the silver ring! Welcome to our town, " + playerName + "!\n\nTHE END";
+                    return "anime: Oh, you returned with the silver ring! Welcome to our town, " + playerName + "!\n\nFuck you";
                 }
-                return "You are at the gate of the town. A guard is standing in front of you." + (lastMessage.isEmpty() ? "" : "\n\n" + lastMessage);
+                return "You are at the gate of the town. An anime girl is standing in front of you." + (lastMessage.isEmpty() ? "" : "\n\n" + lastMessage);
             case CROSSROAD:
                 return "You are at a crossroad. Which direction do you go?" + (lastMessage.isEmpty() ? "" : "\n\n" + lastMessage);
             case NORTH:
-                return "There is a peaceful river. You rest and recover some health." + (lastMessage.isEmpty() ? "" : "\n\n" + lastMessage);
+                return "There is a peaceful river. You fapped and recover some health." + (lastMessage.isEmpty() ? "" : "\n\n" + lastMessage);
             case EAST:
-                return "You walk into a forest and find an old sheath with a better weapon and sometimes a potion." + (lastMessage.isEmpty() ? "" : "\n\n" + lastMessage);
+                return "You walk into a forest and find an old condom with a better weapon and sometimes a meth." + (lastMessage.isEmpty() ? "" : "\n\n" + lastMessage);
             case WEST:
-                return "A goblin appears from the cave and looks hostile!" + (lastMessage.isEmpty() ? "" : "\n\n" + lastMessage);
+                return "A woman appears from the cave and looks hostile!" + (lastMessage.isEmpty() ? "" : "\n\n" + lastMessage);
             case FIGHT:
                 return "The battle begins!" + (lastMessage.isEmpty() ? "" : "\n\n" + lastMessage);
             case GAME_OVER:
                 return "Game Over." + (lastMessage.isEmpty() ? "" : "\n\n" + lastMessage);
             case ENDING:
-                return "Thank you for helping our people. THE END." + (lastMessage.isEmpty() ? "" : "\n\n" + lastMessage);
+                return "Thank you for helping our people. you make a harem in the town and the end." + (lastMessage.isEmpty() ? "" : "\n\n" + lastMessage);
             default:
                 return "";
         }
@@ -74,14 +74,14 @@ public class GameEngine {
                     opts.add("Play again");
                     opts.add("Exit");
                 } else {
-                    opts.add("Talk to the guard");
-                    opts.add("Try to bribe the guard");
+                    opts.add("Talk to the anime");
+                    opts.add("Try to bribe the anime");
                     opts.add("Leave to the crossroad");
                 }
                 break;
             case CROSSROAD:
-                opts.add("North (river)");
-                opts.add("East (forest)");
+                opts.add("North (piss)");
+                opts.add("East (grass)");
                 opts.add("West (cave)");
                 opts.add("Back to town gate");
                 break;
@@ -92,12 +92,12 @@ public class GameEngine {
                 opts.add("Go back to the crossroad");
                 break;
             case WEST:
-                opts.add("Fight");
+                opts.add("Show your young condom");
                 opts.add("Run back to the crossroad");
                 break;
             case FIGHT:
                 opts.add("Attack");
-                opts.add("Use item (Health Potion)");
+                opts.add("Use item (old condom)");
                 opts.add("Run");
                 break;
             case GAME_OVER:
@@ -105,8 +105,8 @@ public class GameEngine {
                 opts.add("Exit");
                 break;
             case ENDING:
-                opts.add("Play again");
-                opts.add("Exit");
+                opts.add("git gud");
+                opts.add("loser");
                 break;
         }
         return opts;
@@ -126,10 +126,10 @@ public class GameEngine {
                 } else {
                     if (index == 0) {
                         // talk
-                        lastMessage = "Guard: Hello " + playerName + ". We don't allow strangers into the town without a token of trust.\nGuard: If you can prove yourself (maybe help someone nearby), I may let you in.";
+                        lastMessage = "anime: yo " + playerName + ". We don't allow strangers into the town without a token of trust.\nanime: If you can prove yourself (maybe help me lose my virginity), I may let you in.";
                     } else if (index == 1) {
                         // bribe
-                        lastMessage = "You offer the guard a small amount of gold, but he declines politely.\nGuard: I can't accept bribery. Do something heroic instead.";
+                        lastMessage = "You offer the anime a small amount of gold, but she declines politely.\nanime: now that i think about it, i feel like a cheap anime so no.";
                     } else if (index == 2) {
                         lastMessage = "";
                         currentScene = Scene.CROSSROAD;
@@ -151,9 +151,9 @@ public class GameEngine {
                 break;
             case EAST:
                 if (index == 0) {
-                    playerWeapon = "Shortsword";
+                    playerWeapon = "old condom";
                     healthPotions += 1;
-                    lastMessage = "You picked up a " + playerWeapon + ". You also found a Health Potion.";
+                    lastMessage = "You picked up a " + playerWeapon + ". You also found a meth.";
                     currentScene = Scene.CROSSROAD;
                 }
                 break;
@@ -175,10 +175,10 @@ public class GameEngine {
                         hasSilverRing = true;
                         StringBuilder sb = new StringBuilder();
                         sb.append("You attack and deal ").append(playerAttack).append(" damage.\n");
-                        sb.append("You defeated the goblin! The goblin drops a small silver ring.");
+                        sb.append("You defeated the woman! The woman drops a small silver ring.");
                         if (random.nextBoolean()) {
                             healthPotions += 1;
-                            sb.append(" The goblin also dropped a Health Potion!");
+                            sb.append(" The woman also dropped another condom!");
                         }
                         lastMessage = sb.toString();
                         currentScene = Scene.CROSSROAD;
@@ -186,9 +186,9 @@ public class GameEngine {
                         // monster attacks
                         int goblinAttack = 3 + (random.nextInt(3) - 1);
                         playerHP -= goblinAttack;
-                        lastMessage = "You attack and deal " + playerAttack + " damage.\nThe goblin attacks and deals " + goblinAttack + " damage.";
+                        lastMessage = "You attack and deal " + playerAttack + " damage.\nThe woman attacks and deals " + goblinAttack + " damage.";
                         if (playerHP <= 0) {
-                            lastMessage += "\nYou have been defeated by the goblin.";
+                            lastMessage += "\nYou have been defeated by the woman.";
                             currentScene = Scene.GAME_OVER;
                         }
                     }
