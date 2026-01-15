@@ -17,6 +17,7 @@ public class GameEngine {
     private int healthPotions;
 
     private Scene currentScene;
+    private String lastMessage = "";
 
     public GameEngine() {
     }
@@ -29,6 +30,7 @@ public class GameEngine {
         hasSilverRing = false;
         healthPotions = 0;
         currentScene = Scene.TOWN_GATE;
+        lastMessage = "";
     }
 
     public String getPlayerName() { return playerName; }
@@ -43,21 +45,21 @@ public class GameEngine {
                 if (hasSilverRing) {
                     return "Guard: Oh, you returned with the silver ring! Welcome to our town, " + playerName + "!\n\nTHE END";
                 }
-                return "You are at the gate of the town. A guard is standing in front of you.";
+                return "You are at the gate of the town. A guard is standing in front of you." + (lastMessage.isEmpty() ? "" : "\n\n" + lastMessage);
             case CROSSROAD:
-                return "You are at a crossroad. Which direction do you go?";
+                return "You are at a crossroad. Which direction do you go?" + (lastMessage.isEmpty() ? "" : "\n\n" + lastMessage);
             case NORTH:
-                return "There is a peaceful river. You rest and recover some health.";
+                return "There is a peaceful river. You rest and recover some health." + (lastMessage.isEmpty() ? "" : "\n\n" + lastMessage);
             case EAST:
-                return "You walk into a forest and find an old sheath with a better weapon and sometimes a potion.";
+                return "You walk into a forest and find an old sheath with a better weapon and sometimes a potion." + (lastMessage.isEmpty() ? "" : "\n\n" + lastMessage);
             case WEST:
-                return "A goblin appears from the cave and looks hostile!";
+                return "A goblin appears from the cave and looks hostile!" + (lastMessage.isEmpty() ? "" : "\n\n" + lastMessage);
             case FIGHT:
-                return "The battle begins!";
+                return "The battle begins!" + (lastMessage.isEmpty() ? "" : "\n\n" + lastMessage);
             case GAME_OVER:
-                return "Game Over.";
+                return "Game Over." + (lastMessage.isEmpty() ? "" : "\n\n" + lastMessage);
             case ENDING:
-                return "Thank you for helping our people. THE END.";
+                return "Thank you for helping our people. THE END." + (lastMessage.isEmpty() ? "" : "\n\n" + lastMessage);
             default:
                 return "";
         }
@@ -124,10 +126,12 @@ public class GameEngine {
                 } else {
                     if (index == 0) {
                         // talk
-                        // remain at gate after message (UI will refresh text)
+                        lastMessage = "Guard: Hello " + playerName + ". We don't allow strangers into the town without a token of trust.\nGuard: If you can prove yourself (maybe help someone nearby), I may let you in.";
                     } else if (index == 1) {
                         // bribe
+                        lastMessage = "You offer the guard a small amount of gold, but he declines politely.\nGuard: I can't accept bribery. Do something heroic instead.";
                     } else if (index == 2) {
+                        lastMessage = "";
                         currentScene = Scene.CROSSROAD;
                     }
                 }
@@ -141,6 +145,7 @@ public class GameEngine {
             case NORTH:
                 if (index == 0) {
                     playerHP = Math.min(playerHP + 2, 20);
+                    lastMessage = "You recovered 2 HP.\nYour HP: " + playerHP;
                     currentScene = Scene.CROSSROAD;
                 }
                 break;
@@ -148,6 +153,7 @@ public class GameEngine {
                 if (index == 0) {
                     playerWeapon = "Shortsword";
                     healthPotions += 1;
+                    lastMessage = "You picked up a " + playerWeapon + ". You also found a Health Potion.";
                     currentScene = Scene.CROSSROAD;
                 }
                 break;
@@ -167,26 +173,36 @@ public class GameEngine {
                     monsterHP -= playerAttack;
                     if (monsterHP <= 0) {
                         hasSilverRing = true;
+                        StringBuilder sb = new StringBuilder();
+                        sb.append("You attack and deal ").append(playerAttack).append(" damage.\n");
+                        sb.append("You defeated the goblin! The goblin drops a small silver ring.");
                         if (random.nextBoolean()) {
                             healthPotions += 1;
+                            sb.append(" The goblin also dropped a Health Potion!");
                         }
+                        lastMessage = sb.toString();
                         currentScene = Scene.CROSSROAD;
                     } else {
                         // monster attacks
                         int goblinAttack = 3 + (random.nextInt(3) - 1);
                         playerHP -= goblinAttack;
+                        lastMessage = "You attack and deal " + playerAttack + " damage.\nThe goblin attacks and deals " + goblinAttack + " damage.";
                         if (playerHP <= 0) {
+                            lastMessage += "\nYou have been defeated by the goblin.";
                             currentScene = Scene.GAME_OVER;
                         }
                     }
                 } else if (index == 1) { // Use potion
                     if (healthPotions > 0) {
+                        int before = playerHP;
                         playerHP = Math.min(20, playerHP + 5);
                         healthPotions -= 1;
+                        lastMessage = "You used a Health Potion. HP: " + before + " -> " + playerHP;
                     } else {
-                        // nothing happens
+                        lastMessage = "You don't have any Health Potions right now.";
                     }
                 } else { // Run
+                    lastMessage = "You run back to the crossroad.";
                     currentScene = Scene.CROSSROAD;
                 }
                 break;
